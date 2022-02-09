@@ -12,8 +12,11 @@ struct ContentView: View {
     @State private var tapCount = 0
     
     var body: some View {
-        Button("Tap count \(tapCount)") {
+        Button {
             tapCount += 1
+        } label: {
+            Image(systemName: "star")
+            Text("Tap count \(tapCount)")
         }
     }
 }
