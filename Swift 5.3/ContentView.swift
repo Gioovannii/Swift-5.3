@@ -8,65 +8,24 @@
 import MapKit
 import SwiftUI
 
-struct SampleRow: View {
-    let id: Int
-    
-    var body: some View {
-        Text("Row \(id)")
-    }
-    
-    init(id: Int) {
-        self.id = id
-        print("Loading row \(id)")
-    }
-}
-
-
 struct ContentView: View {
-    //    let countries = Bundle.main.decode([String].self, from: "countries.json")
-        @State private var position = 0
+    @State private var region  = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 35.689722, longitude: 139.692222), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
+    
+    let manager = CLLocationManager()
     
     var body: some View {
         VStack {
-            Text(String(position)).font(.largeTitle)
-            
-            ScrollView {
-                ForEach(0..<100) { i in
-                    LazyVStack {
-                        Text(String(i))
-                            .onAppear {
-                                position = i
-                            }
-                    }
-                }
-            }
+            Map(coordinateRegion: $region, showsUserLocation: true, userTrackingMode: .constant(.follow))
+            Text("\(region.center.latitude), \(region.center.longitude)")
         }
-      
-        // MARK: - Understand lazy creation view
-        
-        //        ScrollView {
-        //            LazyVStack {
-        //                ForEach(1...1000, id: \.self, content: SampleRow.init)
-        //    }
-        //}
-        
-        
-        // MARK: - Show flags
-        //            LazyVStack(alignment: .leading) {
-        //                ForEach(countries, id: \.self) { country in
-        //                    Image(country)
-        //                        .resizable()
-        //                        .frame(width: 120, height: 60)
-        //                        .border(Color.black, width: 1)
-        //
-        //                    Text(country)
-        //                        .font(.title)
-        //                }
-        //    }
+        .onAppear {
+            manager.requestWhenInUseAuthorization()
+        }
     }
 }
-    struct ContentView_Previews: PreviewProvider {
-        static var previews: some View {
-            ContentView()
-        }
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
+}
